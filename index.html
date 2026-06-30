@@ -92,7 +92,6 @@
       console.warn("Gagal inisialisasi Firebase Cloud. Berjalan dalam Offline Mode.", e);
     }
 
-    // --- REUSABLE RESPONSIVE ICONS ---
     const IconPlus = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>;
     const IconTrash = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.34 9m-4.72 0L9 9m5.57-5l-.43-1.09c-.18-.43-.58-.71-1.05-.71H10.9c-.47 0-.87.28-1.05.71L9.43 4.5H5.43a.75.75 0 000 1.5h13.14a.75.75 0 000-1.5h-4z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19 6.5v12.5a2.25 2.25 0 01-2.25 2.25H7.25A2.25 2.25 0 015 19V6.5" /></svg>;
     const IconCheckCircle = () => <svg className="w-6 h-6 sm:w-7 sm:h-7 text-emerald-500 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.748-5.25z" clipRule="evenodd" /></svg>;
@@ -124,7 +123,27 @@
     const IconSmiley = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M12 21a9 9 0 110-18 9 9 0 010 18zM9.75 9.75c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm6 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75z" /></svg>;
     const IconUsers = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A11.386 11.386 0 0 1 12 19.5c-1.216 0-2.38-.19-3.471-.54M11.25 11.25a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM12 18.75a7.125 7.125 0 0 0-7.125-7.125h-.003M18.75 11.25a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" /></svg>;
 
-    // --- RENDER UTAMA ---
+    const playNotificationBeep = (isSoundEnabled) => {
+      if (!isSoundEnabled) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1100, ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch (e) {
+        console.warn("Failed to play notification beep", e);
+      }
+    };
+
     function App() {
       const [user, setUser] = useState(null);
       const [todos, setTodos] = useState([]);
@@ -144,6 +163,7 @@
 
       // Social States
       const [friends, setFriends] = useState([]);
+      const [friendsStatus, setFriendsStatus] = useState({});
       const [activeFriend, setActiveFriend] = useState(null);
       const [friendUidInput, setFriendUidInput] = useState('');
       const [chatInput, setChatInput] = useState('');
@@ -155,6 +175,9 @@
       const [newPassword, setNewPassword] = useState('');
       const [confirmNewPassword, setConfirmNewPassword] = useState('');
       const [passwordLoading, setPasswordLoading] = useState(false);
+
+      // State Konfirmasi Hapus Teman
+      const [friendToDelete, setFriendToDelete] = useState(null);
 
       const notifRef = useRef(null);
       const audioCtxRef = useRef(null);
@@ -260,6 +283,8 @@
                 displayName: savedName,
                 photo: savedPic,
                 email: currentUser.email,
+                status: 'online',
+                lastActive: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
               }, { merge: true });
 
@@ -290,6 +315,26 @@
         return () => unsubscribeAuth();
       }, []);
 
+      useEffect(() => {
+        if (!user || !isFirebaseReady || user.uid === 'local-guest') return;
+
+        const handleUnload = () => {
+          db.collection('artifacts')
+            .doc('task-pro-loop-alarm')
+            .collection('users_directory')
+            .doc(user.uid)
+            .update({
+              status: 'offline',
+              lastActive: new Date().toISOString()
+            });
+        };
+
+        window.addEventListener('beforeunload', handleUnload);
+        return () => {
+          window.removeEventListener('beforeunload', handleUnload);
+        };
+      }, [user]);
+
       // Realtime listener untuk data teman
       useEffect(() => {
         if (!user) return;
@@ -314,6 +359,39 @@
 
         return unsubscribe;
       }, [user]);
+
+      useEffect(() => {
+        if (friends.length === 0) {
+          setFriendsStatus({});
+          return;
+        }
+        if (!isFirebaseReady || user?.uid === 'local-guest') {
+          // Simulation values for offline/guest friends
+          const simStatus = {};
+          friends.forEach(f => {
+            simStatus[f.uid] = { status: Math.random() > 0.4 ? 'online' : 'offline' };
+          });
+          setFriendsStatus(simStatus);
+          return;
+        }
+
+        const unsubscribes = friends.map(f => {
+          return db.collection('artifacts')
+            .doc('task-pro-loop-alarm')
+            .collection('users_directory')
+            .doc(f.uid)
+            .onSnapshot(doc => {
+              if (doc.exists) {
+                setFriendsStatus(prev => ({
+                  ...prev,
+                  [f.uid]: doc.data()
+                }));
+              }
+            });
+        });
+
+        return () => unsubscribes.forEach(unsub => unsub());
+      }, [friends, user]);
 
       // Realtime listener untuk data obrolan (Chat)
       useEffect(() => {
@@ -349,6 +427,43 @@
 
         return unsubscribe;
       }, [user, activeFriend]);
+
+      useEffect(() => {
+        if (!user || friends.length === 0) return;
+        if (!isFirebaseReady || user.uid === 'local-guest') return;
+
+        const unsubscribes = friends.map(friend => {
+          const roomId = user.uid < friend.uid 
+            ? `${user.uid}_${friend.uid}` 
+            : `${friend.uid}_${user.uid}`;
+
+          let isFirstLoad = true;
+          return db.collection('artifacts')
+            .doc('task-pro-loop-alarm')
+            .collection('chats')
+            .doc(roomId)
+            .collection('messages')
+            .orderBy('timestamp', 'desc')
+            .limit(1)
+            .onSnapshot(snap => {
+              if (isFirstLoad) {
+                isFirstLoad = false;
+                return;
+              }
+              snap.forEach(doc => {
+                const msg = doc.data();
+                const isFromFriend = msg.senderUid === friend.uid;
+                const isChatInactive = activeFriend?.uid !== friend.uid || currentView !== 'social';
+                if (isFromFriend && isChatInactive) {
+                  showToast(`Pesan baru dari ${friend.displayName || 'Teman'}: "${msg.text}"`, 'info');
+                  playNotificationBeep(isSoundEnabled);
+                }
+              });
+            });
+        });
+
+        return () => unsubscribes.forEach(unsub => unsub());
+      }, [user, friends, activeFriend, currentView, isSoundEnabled]);
 
       // Backup ke LocalStorage jika berjalan dalam offline
       useEffect(() => {
@@ -494,6 +609,35 @@
         }
       };
 
+      const handleDeleteFriend = async (friendUid, e) => {
+        if (e) e.stopPropagation(); // Mencegah terbukanya obrolan secara tidak sengaja
+        
+        try {
+          if (isFirebaseReady && user && user.uid !== 'local-guest') {
+            await db.collection('artifacts')
+              .doc('task-pro-loop-alarm')
+              .collection('users')
+              .doc(user.uid)
+              .collection('friends')
+              .doc(friendUid)
+              .delete();
+          } else {
+            const updatedFriends = friends.filter(f => f.uid !== friendUid);
+            setFriends(updatedFriends);
+            localStorage.setItem(`local_friends_${user.uid}`, JSON.stringify(updatedFriends));
+          }
+
+          if (activeFriend && activeFriend.uid === friendUid) {
+            setActiveFriend(null);
+          }
+
+          showToast("Teman berhasil dihapus dari daftar kontak Anda.", "info");
+        } catch (err) {
+          console.error("Gagal menghapus kontak:", err);
+          showToast("Gagal menghapus teman.", "error");
+        }
+      };
+
       // Mengirimkan pesan real-time
       const handleSendMessage = async (e) => {
         e.preventDefault();
@@ -527,6 +671,8 @@
               localStorage.setItem(chatKey, JSON.stringify(withReply));
               return withReply;
             });
+            playNotificationBeep(isSoundEnabled);
+            showToast(`Pesan baru dari ${activeFriend.displayName}`, 'info');
           }, 1500);
           return;
         }
@@ -565,7 +711,6 @@
 
         setChatInput(before + emoji + after);
 
-        // Kembalikan fokus ke kolom input dan geser kursor setelah emoji yang dimasukkan
         setTimeout(() => {
           input.focus();
           input.setSelectionRange(start + emoji.length, start + emoji.length);
@@ -657,6 +802,22 @@
         stopContinuousAlarm();
         setCurrentView('dashboard');
         setActiveFriend(null);
+        
+        if (isFirebaseReady && user && user.uid !== 'local-guest') {
+          try {
+            await db.collection('artifacts')
+              .doc('task-pro-loop-alarm')
+              .collection('users_directory')
+              .doc(user.uid)
+              .update({
+                status: 'offline',
+                lastActive: new Date().toISOString()
+              });
+          } catch (e) {
+            console.warn("Failed to update status to offline during logout", e);
+          }
+        }
+
         if (!isFirebaseReady || user?.uid === 'local-guest') {
           setUser(null);
           setTodos([]);
@@ -688,7 +849,6 @@
               displayName: profileName.trim()
             });
 
-            // Update global directory
             await db.collection('artifacts')
               .doc('task-pro-loop-alarm')
               .collection('users_directory')
@@ -897,7 +1057,6 @@
         return alerts;
       }, [todos]);
 
-      // Mengontrol alarm dari pendeteksi tenggat waktu
       useEffect(() => {
         if (notifications.length === 0) {
           if (isAlarmPlaying) stopContinuousAlarm();
@@ -936,7 +1095,6 @@
 
       }, [notifications, isSoundEnabled]);
 
-      // Pemrosesan Pencarian dan Penyaringan Rencana Kerja
       const processedTodos = useMemo(() => {
         return todos
           .filter(t => {
@@ -962,7 +1120,6 @@
         high: todos.filter(t => t.priority === 'Tinggi' && !t.completed).length
       };
 
-      // Tampilan Loading Screen Responsif
       if (loading) return (
         <div className="h-screen w-full flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950 transition-colors">
           <div className="w-10 h-10 sm:w-12 sm:h-12 text-indigo-600 dark:text-indigo-400 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
@@ -1145,7 +1302,7 @@
       return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
           
-          {/* --- RESPONSIVE STICKY NAVBAR --- */}
+          {/* --- STICKY NAVBAR --- */}
           <nav className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
               <div 
@@ -1547,35 +1704,59 @@
                           Daftar teman kosong.<br />Yuk tambah teman pertama Anda menggunakan ID mereka!
                         </div>
                       ) : (
-                        friends.map((friend) => (
-                          <div 
-                            key={friend.uid} 
-                            onClick={() => setActiveFriend(friend)}
-                            className={`flex items-center justify-between p-2.5 rounded-2xl cursor-pointer transition ${
-                              activeFriend?.uid === friend.uid 
-                                ? 'bg-indigo-500/15 border border-indigo-400/45' 
-                                : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 border border-transparent'
-                            }`}
-                          >
-                            <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-9 h-9 rounded-full overflow-hidden bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-                                {friend.photo ? (
-                                  <img src={friend.photo} alt={friend.displayName} className="w-full h-full object-cover" />
-                                ) : (
-                                  <IconUser />
-                                )}
+                        friends.map((friend) => {
+                          const friendDetails = friendsStatus[friend.uid] || friend;
+                          const isOnline = friendDetails.status === 'online';
+                          return (
+                            <div 
+                              key={friend.uid} 
+                              onClick={() => setActiveFriend(friend)}
+                              className={`flex items-center justify-between p-2.5 rounded-2xl cursor-pointer transition ${
+                                activeFriend?.uid === friend.uid 
+                                  ? 'bg-indigo-500/15 border border-indigo-400/45' 
+                                  : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 border border-transparent'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3 min-w-0">
+                                <div className="relative w-9 h-9 shrink-0">
+                                  {/* Kontainer Avatar dengan overflow-hidden yang terpisah */}
+                                  <div className="w-full h-full rounded-full overflow-hidden bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                    {friend.photo ? (
+                                      <img src={friend.photo} alt={friend.displayName} className="w-full h-full object-cover" />
+                                    ) : (
+                                      <IconUser />
+                                    )}
+                                  </div>
+                                  {/* Indikator Online/Offline diletakkan di luar overflow-hidden agar bulat sempurna */}
+                                  <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-slate-900 ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></span>
+                                </div>
+                                <div className="min-w-0">
+                                  <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{friend.displayName}</h4>
+                                  <p className="text-[9px] text-slate-400 dark:text-slate-500 truncate flex items-center gap-1">
+                                    <span className="font-semibold text-slate-300 dark:text-slate-700">ID:</span> {friend.uid.slice(0, 8)}...
+                                  </p>
+                                </div>
                               </div>
-                              <div className="min-w-0">
-                                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{friend.displayName}</h4>
-                                <p className="text-[9px] text-slate-400 dark:text-slate-500 truncate">ID: {friend.uid.slice(0, 8)}...</p>
+                              
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-lg font-bold">
+                                  Chat
+                                </span>
+                                {/* Tombol Hapus Teman - Membuka Modal Konfirmasi */}
+                                <button 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setFriendToDelete(friend);
+                                  }}
+                                  className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition-all"
+                                  title="Hapus Teman"
+                                >
+                                  <IconTrash />
+                                </button>
                               </div>
                             </div>
-                            
-                            <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-lg font-bold shrink-0">
-                              Chat
-                            </span>
-                          </div>
-                        ))
+                          );
+                        })
                       )}
                     </div>
                   </div>
@@ -1603,16 +1784,28 @@
                         {/* Header Chat */}
                         <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/20">
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="w-9 h-9 rounded-full overflow-hidden bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-                              {activeFriend.photo ? (
-                                <img src={activeFriend.photo} alt={activeFriend.displayName} className="w-full h-full object-cover" />
-                              ) : (
-                                <IconUser />
-                              )}
+                            <div className="relative w-9 h-9 shrink-0">
+                              {/* Kontainer Avatar header chat yang terpisah dari overflow-hidden */}
+                              <div className="w-full h-full rounded-full overflow-hidden bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                {activeFriend.photo ? (
+                                  <img src={activeFriend.photo} alt={activeFriend.displayName} className="w-full h-full object-cover" />
+                                ) : (
+                                  <IconUser />
+                                )}
+                              </div>
+                              {/* Indikator Online/Offline bulat sempurna tanpa terpotong */}
+                              <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-indigo-950 ${(friendsStatus[activeFriend.uid] || activeFriend).status === 'online' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></span>
                             </div>
                             <div className="min-w-0">
                               <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{activeFriend.displayName}</h4>
-                              <p className="text-[9px] text-slate-400 dark:text-slate-500 font-mono truncate">ID: {activeFriend.uid}</p>
+                              <p className="text-[9px] text-slate-400 dark:text-slate-500 font-mono truncate flex items-center gap-1.5">
+                                <span className="font-semibold text-slate-300 dark:text-slate-700">UID:</span> {activeFriend.uid}
+                                <span className={`text-[8px] font-bold px-1.5 py-0.2 rounded ${
+                                  (friendsStatus[activeFriend.uid] || activeFriend).status === 'online' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-400/10 text-slate-400'
+                                }`}>
+                                  {(friendsStatus[activeFriend.uid] || activeFriend).status === 'online' ? 'Online' : 'Offline'}
+                                </span>
+                              </p>
                             </div>
                           </div>
                           
@@ -2013,6 +2206,40 @@
                 <div className="mt-6">
                   <button onClick={stopContinuousAlarm} className="w-full py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-2xl transition-all shadow-lg hover:scale-105 active:scale-95 text-xs sm:text-sm">
                     Matikan Suara Alarm
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* --- POPUP DI TENGAH: KONFIRMASI HAPUS TEMAN --- */}
+          {friendToDelete && (
+            <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-slate-900 w-[92%] max-w-sm rounded-[24px] p-6 text-center shadow-2xl border border-slate-200 dark:border-slate-800 animate-fade-in">
+                <div className="w-12 h-12 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-rose-100 dark:border-rose-900/20">
+                  <IconTrash />
+                </div>
+
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white">Hapus Kontak Teman?</h3>
+                <p className="text-xs text-slate-550 dark:text-slate-400 mt-2 px-1">
+                  Apakah Anda yakin ingin menghapus <strong>{friendToDelete.displayName}</strong> dari daftar teman Anda? Riwayat percakapan juga akan ditutup.
+                </p>
+
+                <div className="mt-6 flex gap-3">
+                  <button 
+                    onClick={() => setFriendToDelete(null)}
+                    className="flex-1 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold rounded-xl text-xs transition"
+                  >
+                    Batal
+                  </button>
+                  <button 
+                    onClick={async () => {
+                      await handleDeleteFriend(friendToDelete.uid);
+                      setFriendToDelete(null);
+                    }}
+                    className="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs transition shadow-lg shadow-rose-100 dark:shadow-none"
+                  >
+                    Ya, Hapus
                   </button>
                 </div>
               </div>
