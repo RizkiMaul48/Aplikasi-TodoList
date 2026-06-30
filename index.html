@@ -179,6 +179,9 @@
       const [chatInput, setChatInput] = useState('');
       const [messages, setMessages] = useState([]);
       const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+      
+      // State Penyimpanan Pesan Belum Terbaca (Unread Messages)
+      const [unreadMessages, setUnreadMessages] = useState([]);
 
       // Password Change states
       const [oldPassword, setOldPassword] = useState('');
@@ -354,6 +357,7 @@
           return;
         }
 
+        let isFirstLoad = true;
         const unsubscribe = db.collection('artifacts')
           .doc('task-pro-loop-alarm')
           .collection('users')
@@ -361,14 +365,33 @@
           .collection('friends')
           .onSnapshot((snap) => {
             const loadedFriends = [];
+            let newIncomingRequest = false;
+
+            // Mendeteksi jika ada penambahan dokumen baru dengan status received (Permintaan Masuk)
+            snap.docChanges().forEach((change) => {
+              if (change.type === 'added') {
+                const data = change.doc.data();
+                if (data.status === 'received') {
+                  newIncomingRequest = true;
+                }
+              }
+            });
+
             snap.forEach((doc) => {
               loadedFriends.push({ uid: doc.id, ...doc.data() });
             });
             setFriends(loadedFriends);
+
+            // Bunyikan beep dan munculkan toast jika ada permintaan pertemanan baru masuk
+            if (!isFirstLoad && newIncomingRequest) {
+              showToast("Ada permintaan pertemanan baru masuk!", "info");
+              playNotificationBeep(isSoundEnabled);
+            }
+            isFirstLoad = false;
           });
 
         return unsubscribe;
-      }, [user]);
+      }, [user, isSoundEnabled]);
 
       useEffect(() => {
         if (friends.length === 0) {
@@ -464,12 +487,17 @@
                 return;
               }
               snap.forEach(doc => {
-                const msg = doc.data();
+                const msg = { id: doc.id, ...doc.data() };
                 const isFromFriend = msg.senderUid === friend.uid;
                 const isChatInactive = activeFriend?.uid !== friend.uid || currentView !== 'social';
                 if (isFromFriend && isChatInactive) {
-                  showToast(`Pesan baru dari ${friend.displayName || 'Teman'}: "${msg.text}"`, 'info');
-                  playNotificationBeep(isSoundEnabled);
+                  // Tambahkan ke state unreadMessages dan bunyikan notifikasi
+                  setUnreadMessages(prev => {
+                    if (prev.some(m => m.id === msg.id)) return prev;
+                    showToast(`Pesan baru dari ${friend.displayName || 'Teman'}: "${msg.text}"`, 'info');
+                    playNotificationBeep(isSoundEnabled);
+                    return [...prev, { ...msg, friendName: friend.displayName, friendUid: friend.uid }];
+                  });
                 }
               });
             });
@@ -477,6 +505,13 @@
 
         return () => unsubscribes.forEach(unsub => unsub());
       }, [user, friends, activeFriend, currentView, isSoundEnabled]);
+
+      // Hapus pesan dari daftar unread jika percakapan dengan teman tersebut dibuka
+      useEffect(() => {
+        if (activeFriend && currentView === 'social') {
+          setUnreadMessages(prev => prev.filter(m => m.friendUid !== activeFriend.uid));
+        }
+      }, [activeFriend, currentView]);
 
       // Backup ke LocalStorage jika berjalan dalam offline
       useEffect(() => {
@@ -1101,6 +1136,7 @@
         const now = new Date();
         const alerts = [];
         
+        // 1. Notifikasi Tugas (Overdue & Urgent)
         todos.forEach(todo => {
           if (todo.completed || !todo.dueDate) return;
           
@@ -1110,7 +1146,7 @@
 
           if (diffMs < 0) {
             alerts.push({
-              id: todo.id,
+              id: `task_overdue_${todo.id}`,
               title: todo.title,
               type: 'overdue',
               message: 'Telah melewati batas waktu yang ditentukan!',
@@ -1119,7 +1155,7 @@
           } else if (diffHours <= 24) {
             const hoursLeft = Math.max(0, Math.ceil(diffHours));
             alerts.push({
-              id: todo.id,
+              id: `task_urgent_${todo.id}`,
               title: todo.title,
               type: 'urgent',
               message: hoursLeft === 0 ? 'Tenggat waktu tersisa kurang dari 1 jam!' : `Tenggat waktu tersisa kurang dari ${hoursLeft} jam!`,
@@ -1127,9 +1163,35 @@
             });
           }
         });
+
+        // 2. Notifikasi Permintaan Pertemanan Masuk
+        friends.forEach(f => {
+          if (f.status === 'received') {
+            alerts.push({
+              id: `friend_req_${f.uid}`,
+              title: 'Permintaan Pertemanan',
+              type: 'friend_request',
+              message: `${f.displayName} mengirimi Anda permintaan pertemanan.`,
+              dueDate: f.addedAt || new Date().toISOString(),
+              friendUid: f.uid
+            });
+          }
+        });
+
+        // 3. Notifikasi Pesan Belum Terbaca
+        unreadMessages.forEach(msg => {
+          alerts.push({
+            id: `msg_${msg.id}`,
+            title: `Pesan dari ${msg.friendName}`,
+            type: 'message',
+            message: `"${msg.text}"`,
+            dueDate: msg.timestamp,
+            friendUid: msg.friendUid
+          });
+        });
         
         return alerts;
-      }, [todos]);
+      }, [todos, friends, unreadMessages]);
 
       useEffect(() => {
         if (notifications.length === 0) {
@@ -1137,7 +1199,9 @@
           return;
         }
 
-        const newUnalertedTasks = notifications.filter(notif => !alertedTaskIds.current.has(notif.id));
+        // Filter pemicu alarm hanya untuk notifikasi tugas mendesak/terlewat
+        const taskNotifications = notifications.filter(n => n.type === 'overdue' || n.type === 'urgent');
+        const newUnalertedTasks = taskNotifications.filter(notif => !alertedTaskIds.current.has(notif.id));
 
         if (newUnalertedTasks.length > 0) {
           setActiveAlarmTasks(prev => {
@@ -1162,7 +1226,7 @@
           });
         }
 
-        const currentNotifIds = new Set(notifications.map(n => n.id));
+        const currentNotifIds = new Set(taskNotifications.map(n => n.id));
         alertedTaskIds.current.forEach(id => {
           if (!currentNotifIds.has(id)) alertedTaskIds.current.delete(id);
         });
@@ -1470,20 +1534,36 @@
                       <div className="max-h-64 overflow-y-auto">
                         {notifications.length === 0 ? (
                           <div className="px-4 py-8 text-center text-slate-400 dark:text-slate-500 text-xs">
-                            Semua tugas aman! Tidak ada deadline mendesak.
+                            Semua tugas aman! Tidak ada pemberitahuan baru.
                           </div>
                         ) : (
                           notifications.map((notif) => (
-                            <div key={notif.id} className="p-3 border-b border-slate-100 dark:border-slate-800/50 flex gap-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-all">
-                              <div className="mt-0.5">
-                                {notif.type === 'overdue' ? <IconAlertCircle /> : <IconAlertTriangle />}
+                            <div 
+                              key={notif.id} 
+                              onClick={() => {
+                                if (notif.type === 'friend_request' || notif.type === 'message') {
+                                  setCurrentView('social');
+                                  if (notif.friendUid) {
+                                    const foundFriend = friends.find(f => f.uid === notif.friendUid);
+                                    if (foundFriend) setActiveFriend(foundFriend);
+                                  }
+                                }
+                                setShowNotifCenter(false);
+                              }}
+                              className="p-3 border-b border-slate-100 dark:border-slate-800/50 flex gap-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-all cursor-pointer"
+                            >
+                              <div className="mt-0.5 shrink-0">
+                                {notif.type === 'overdue' && <IconAlertCircle />}
+                                {notif.type === 'urgent' && <IconAlertTriangle />}
+                                {notif.type === 'friend_request' && <IconUserPlus />}
+                                {notif.type === 'message' && <IconMessageSquare />}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{notif.title}</p>
                                 <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{notif.message}</p>
                                 <p className="text-[9px] font-bold text-indigo-500 dark:text-indigo-400 mt-1 flex items-center gap-1">
-                                  <IconCalendar className="w-3 h-3" />
-                                  {new Date(notif.dueDate).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}
+                                  <IconClock className="w-3 h-3" />
+                                  {new Date(notif.dueDate).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
                                 </p>
                               </div>
                             </div>
