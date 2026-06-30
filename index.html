@@ -31,7 +31,7 @@
   <style>
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      overflow-x: hidden; /* Mencegah scrollbar horizontal yang merusak estetika */
+      overflow-x: hidden;
     }
     /* Kustomisasi scrollbar halus */
     ::-webkit-scrollbar {
@@ -66,7 +66,7 @@
   <script type="text/babel">
     const { useState, useEffect, useMemo, useRef } = React;
 
-    // Silakan ganti dengan kredensial Firebase Anda jika ingin dihubungkan ke Cloud database pribadi Anda.
+    // Kredensial Firebase Proyek TugasKu
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_AUTH_DOMAIN",
@@ -116,7 +116,15 @@
     const IconMail = () => <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0l-7.5-4.615a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>;
     const IconLock = () => <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0V10.5m-2.25 0h13.5a2.25 2.25 0 012.25 2.25v6.75a2.25 2.25 0 01-2.25 2.25H4.5a2.25 2.25 0 01-2.25-2.25v-6.75a2.25 2.25 0 012.25-2.25z" /></svg>;
     const IconKey = () => <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-.1.43-.563A6 6 0 1121.75 8.25z" /></svg>;
+    const IconPencil = () => <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>;
+    const IconArrowLeft = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>;
+    const IconMessageSquare = () => <svg className="w-6 h-6 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>;
+    const IconUserPlus = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v9m-4.5-4.5h9M3.75 20.118a7.5 7.5 0 0113.111-4.321M9.75 9.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" /></svg>;
+    const IconSend = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>;
+    const IconSmiley = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M12 21a9 9 0 110-18 9 9 0 010 18zM9.75 9.75c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm6 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75z" /></svg>;
+    const IconUsers = () => <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.109A11.386 11.386 0 0 1 12 19.5c-1.216 0-2.38-.19-3.471-.54M11.25 11.25a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0ZM12 18.75a7.125 7.125 0 0 0-7.125-7.125h-.003M18.75 11.25a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Z" /></svg>;
 
+    // --- RENDER UTAMA ---
     function App() {
       const [user, setUser] = useState(null);
       const [todos, setTodos] = useState([]);
@@ -126,10 +134,35 @@
       const [isAlarmPlaying, setIsAlarmPlaying] = useState(false);
       const [activeAlarmTasks, setActiveAlarmTasks] = useState([]);
 
+      // View state: 'dashboard' | 'profile' | 'social'
+      const [currentView, setCurrentView] = useState('dashboard');
+
+      // Edit Profile states
+      const [profileName, setProfileName] = useState('');
+      const [profilePic, setProfilePic] = useState('');
+      const [isEditingProfile, setIsEditingProfile] = useState(false);
+
+      // Social States
+      const [friends, setFriends] = useState([]);
+      const [activeFriend, setActiveFriend] = useState(null);
+      const [friendUidInput, setFriendUidInput] = useState('');
+      const [chatInput, setChatInput] = useState('');
+      const [messages, setMessages] = useState([]);
+      const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+      // Password Change states
+      const [oldPassword, setOldPassword] = useState('');
+      const [newPassword, setNewPassword] = useState('');
+      const [confirmNewPassword, setConfirmNewPassword] = useState('');
+      const [passwordLoading, setPasswordLoading] = useState(false);
+
       const notifRef = useRef(null);
       const audioCtxRef = useRef(null);
       const alarmIntervalRef = useRef(null);
       const alertedTaskIds = useRef(new Set());
+      const chatEndRef = useRef(null);
+      const chatInputRef = useRef(null);
+      const emojiPickerRef = useRef(null);
 
       // Halaman Autentikasi
       const [authMode, setAuthMode] = useState('login'); // login | register
@@ -184,12 +217,25 @@
         localStorage.setItem('sound_enabled', isSoundEnabled);
       }, [isSoundEnabled]);
 
+      // Auto scroll chat to bottom
+      useEffect(() => {
+        if (chatEndRef.current) {
+          chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, [messages]);
+
       useEffect(() => {
         if (!isFirebaseReady) {
           // Mode Offline Cadangan
           const localData = localStorage.getItem('local_todos');
           if (localData) setTodos(JSON.parse(localData));
-          setUser({ uid: 'local-guest', email: 'offline-guest@tugasku.pro', isAnonymous: true });
+          
+          const localProfileName = localStorage.getItem('local_profile_name') || 'offline-guest';
+          setProfileName(localProfileName);
+
+          const localPic = localStorage.getItem('local_profile_pic_guest') || '';
+          setProfilePic(localPic);
+
           setLoading(false);
           return;
         }
@@ -198,6 +244,25 @@
         const unsubscribeAuth = auth.onAuthStateChanged((currentUser) => {
           setUser(currentUser);
           if (currentUser) {
+            const savedName = currentUser.displayName || currentUser.email.split('@')[0];
+            setProfileName(savedName);
+            
+            const savedPic = localStorage.getItem(`profile_pic_${currentUser.uid}`) || '';
+            setProfilePic(savedPic);
+
+            // Sync ke direktori global
+            db.collection('artifacts')
+              .doc('task-pro-loop-alarm')
+              .collection('users_directory')
+              .doc(currentUser.uid)
+              .set({
+                uid: currentUser.uid,
+                displayName: savedName,
+                photo: savedPic,
+                email: currentUser.email,
+                updatedAt: new Date().toISOString()
+              }, { merge: true });
+
             const unsubscribeTodos = db.collection('artifacts')
               .doc('task-pro-loop-alarm')
               .collection('users')
@@ -217,12 +282,73 @@
               });
             return () => unsubscribeTodos();
           } else {
+            setCurrentView('dashboard'); // Reset tampilan ke dashboard default jika keluar
             setLoading(false);
           }
         });
 
         return () => unsubscribeAuth();
       }, []);
+
+      // Realtime listener untuk data teman
+      useEffect(() => {
+        if (!user) return;
+        if (!isFirebaseReady || user.uid === 'local-guest') {
+          const cachedFriends = JSON.parse(localStorage.getItem(`local_friends_${user.uid}`) || '[]');
+          setFriends(cachedFriends);
+          return;
+        }
+
+        const unsubscribe = db.collection('artifacts')
+          .doc('task-pro-loop-alarm')
+          .collection('users')
+          .doc(user.uid)
+          .collection('friends')
+          .onSnapshot((snap) => {
+            const loadedFriends = [];
+            snap.forEach((doc) => {
+              loadedFriends.push({ uid: doc.id, ...doc.data() });
+            });
+            setFriends(loadedFriends);
+          });
+
+        return unsubscribe;
+      }, [user]);
+
+      // Realtime listener untuk data obrolan (Chat)
+      useEffect(() => {
+        if (!user || !activeFriend) {
+          setMessages([]);
+          return;
+        }
+
+        if (!isFirebaseReady || user.uid === 'local-guest') {
+          const chatKey = `mock_chat_${user.uid}_${activeFriend.uid}`;
+          const localMsgs = JSON.parse(localStorage.getItem(chatKey) || '[]');
+          setMessages(localMsgs);
+          return;
+        }
+
+        const roomId = user.uid < activeFriend.uid 
+          ? `${user.uid}_${activeFriend.uid}` 
+          : `${activeFriend.uid}_${user.uid}`;
+
+        const unsubscribe = db.collection('artifacts')
+          .doc('task-pro-loop-alarm')
+          .collection('chats')
+          .doc(roomId)
+          .collection('messages')
+          .orderBy('timestamp', 'asc')
+          .onSnapshot((snap) => {
+            const loadedMsgs = [];
+            snap.forEach((doc) => {
+              loadedMsgs.push({ id: doc.id, ...doc.data() });
+            });
+            setMessages(loadedMsgs);
+          });
+
+        return unsubscribe;
+      }, [user, activeFriend]);
 
       // Backup ke LocalStorage jika berjalan dalam offline
       useEffect(() => {
@@ -236,6 +362,9 @@
         function handleClickOutside(event) {
           if (notifRef.current && !notifRef.current.contains(event.target)) {
             setShowNotifCenter(false);
+          }
+          if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target)) {
+            setShowEmojiPicker(false);
           }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -301,6 +430,147 @@
           if (alarmIntervalRef.current) clearInterval(alarmIntervalRef.current);
         };
       }, []);
+
+      // Aksi Menambahkan Teman baru
+      const handleAddFriend = async (e) => {
+        e.preventDefault();
+        const inputUid = friendUidInput.trim();
+        if (!inputUid) return;
+
+        if (inputUid === user.uid) {
+          showToast("Anda tidak bisa menambahkan ID Anda sendiri!", "error");
+          return;
+        }
+
+        if (friends.some(f => f.uid === inputUid)) {
+          showToast("ID Teman ini sudah ada dalam daftar teman Anda.", "warning");
+          return;
+        }
+
+        if (!isFirebaseReady || user.uid === 'local-guest') {
+          // Tambah simulator teman lokal (Offline Mode)
+          const mockFriend = {
+            uid: inputUid,
+            displayName: `Teman Simulasi (${inputUid.slice(0, 5)})`,
+            photo: ''
+          };
+          const updatedFriends = [...friends, mockFriend];
+          setFriends(updatedFriends);
+          localStorage.setItem(`local_friends_${user.uid}`, JSON.stringify(updatedFriends));
+          showToast("Sesi Teman offline berhasil disimulasikan!", "success");
+          setFriendUidInput('');
+          return;
+        }
+
+        try {
+          const docRef = await db.collection('artifacts')
+            .doc('task-pro-loop-alarm')
+            .collection('users_directory')
+            .doc(inputUid)
+            .get();
+
+          if (!docRef.exists) {
+            showToast("ID akun tidak terdaftar di direktori global!", "error");
+            return;
+          }
+
+          const friendData = docRef.data();
+          await db.collection('artifacts')
+            .doc('task-pro-loop-alarm')
+            .collection('users')
+            .doc(user.uid)
+            .collection('friends')
+            .doc(inputUid)
+            .set({
+              displayName: friendData.displayName || 'Tamu',
+              photo: friendData.photo || '',
+              addedAt: new Date().toISOString()
+            });
+
+          showToast(`Berhasil berteman dengan ${friendData.displayName}!`, "success");
+          setFriendUidInput('');
+        } catch (e) {
+          showToast("Gagal mendeteksi teman.", "error");
+        }
+      };
+
+      // Mengirimkan pesan real-time
+      const handleSendMessage = async (e) => {
+        e.preventDefault();
+        const text = chatInput.trim();
+        if (!text) return;
+
+        const payload = {
+          senderUid: user.uid,
+          text,
+          timestamp: new Date().toISOString()
+        };
+
+        setShowEmojiPicker(false);
+
+        if (!isFirebaseReady || user.uid === 'local-guest') {
+          // Tambah pesan lokal (Offline Mode) + simulasi balasan
+          const chatKey = `mock_chat_${user.uid}_${activeFriend.uid}`;
+          const updatedMsgs = [...messages, payload];
+          setMessages(updatedMsgs);
+          localStorage.setItem(chatKey, JSON.stringify(updatedMsgs));
+          setChatInput('');
+
+          setTimeout(() => {
+            const replyPayload = {
+              senderUid: activeFriend.uid,
+              text: `Halo, ini adalah simulasi respon otomatis untuk teks Anda: "${text}"`,
+              timestamp: new Date().toISOString()
+            };
+            setMessages(prev => {
+              const withReply = [...prev, replyPayload];
+              localStorage.setItem(chatKey, JSON.stringify(withReply));
+              return withReply;
+            });
+          }, 1500);
+          return;
+        }
+
+        try {
+          const roomId = user.uid < activeFriend.uid 
+            ? `${user.uid}_${activeFriend.uid}` 
+            : `${activeFriend.uid}_${user.uid}`;
+
+          await db.collection('artifacts')
+            .doc('task-pro-loop-alarm')
+            .collection('chats')
+            .doc(roomId)
+            .collection('messages')
+            .add(payload);
+
+          setChatInput('');
+        } catch (e) {
+          showToast("Gagal mengirim pesan obrolan.", "error");
+        }
+      };
+
+      // Fungsi menyisipkan emoji pada posisi kursor terakhir
+      const handleInsertEmoji = (emoji) => {
+        const input = chatInputRef.current;
+        if (!input) {
+          setChatInput(prev => prev + emoji);
+          return;
+        }
+
+        const start = input.selectionStart;
+        const end = input.selectionEnd;
+        const text = chatInput;
+        const before = text.substring(0, start);
+        const after = text.substring(end, text.length);
+
+        setChatInput(before + emoji + after);
+
+        // Kembalikan fokus ke kolom input dan geser kursor setelah emoji yang dimasukkan
+        setTimeout(() => {
+          input.focus();
+          input.setSelectionRange(start + emoji.length, start + emoji.length);
+        }, 10);
+      };
 
       const handleRegister = async (e) => {
         e.preventDefault();
@@ -372,7 +642,7 @@
       const handleAnonymousLogin = () => {
         if (!isFirebaseReady) {
           showToast("Mode Offline diaktifkan. Data tersimpan lokal.", "info");
-          setUser({ uid: 'local-guest', email: 'guest@tugasku.pro', isAnonymous: true });
+          setUser({ uid: 'local-guest', email: 'guest@tugasku.pro', isAnonymous: true, displayName: profileName });
           return;
         }
 
@@ -385,6 +655,8 @@
 
       const handleLogout = async () => {
         stopContinuousAlarm();
+        setCurrentView('dashboard');
+        setActiveFriend(null);
         if (!isFirebaseReady || user?.uid === 'local-guest') {
           setUser(null);
           setTodos([]);
@@ -397,6 +669,110 @@
           showToast("Sesi berakhir, sampai jumpa lagi!", "info");
         } catch (err) {
           showToast("Gagal mengeluarkan akun.", "error");
+        }
+      };
+
+      const handleSaveProfile = async () => {
+        if (!profileName.trim()) {
+          showToast("Nama panggilan tidak boleh kosong!", "error");
+          return;
+        }
+
+        try {
+          if (isFirebaseReady && user && user.uid !== 'local-guest') {
+            await auth.currentUser.updateProfile({
+              displayName: profileName.trim()
+            });
+            setUser({
+              ...auth.currentUser,
+              displayName: profileName.trim()
+            });
+
+            // Update global directory
+            await db.collection('artifacts')
+              .doc('task-pro-loop-alarm')
+              .collection('users_directory')
+              .doc(user.uid)
+              .set({
+                displayName: profileName.trim(),
+                photo: profilePic
+              }, { merge: true });
+
+          } else {
+            localStorage.setItem('local_profile_name', profileName.trim());
+            setUser({
+              ...user,
+              displayName: profileName.trim()
+            });
+          }
+          showToast("Profil berhasil diperbarui! ✨", "success");
+          setIsEditingProfile(false);
+        } catch (err) {
+          console.error(err);
+          showToast("Gagal memperbarui profil.", "error");
+        }
+      };
+
+      const handleUploadPhoto = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (file.size > 1024 * 1024) {
+          showToast("Ukuran foto maksimal adalah 1MB!", "error");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const base64data = reader.result;
+          setProfilePic(base64data);
+          
+          if (isFirebaseReady && user && user.uid !== 'local-guest') {
+            localStorage.setItem(`profile_pic_${user.uid}`, base64data);
+            await db.collection('artifacts')
+              .doc('task-pro-loop-alarm')
+              .collection('users_directory')
+              .doc(user.uid)
+              .set({
+                photo: base64data
+              }, { merge: true });
+          } else {
+            localStorage.setItem('local_profile_pic_guest', base64data);
+          }
+          
+          showToast("Foto profil berhasil diperbarui!", "success");
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const handleUpdatePassword = async (e) => {
+        e.preventDefault();
+        if (!oldPassword || !newPassword || !confirmNewPassword) {
+          showToast("Semua kolom sandi harus diisi!", "error");
+          return;
+        }
+        if (newPassword !== confirmNewPassword) {
+          showToast("Konfirmasi kata sandi baru tidak cocok!", "error");
+          return;
+        }
+
+        setPasswordLoading(true);
+        try {
+          const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
+          await auth.currentUser.reauthenticateWithCredential(credential);
+          await auth.currentUser.updatePassword(newPassword);
+          
+          showToast("Kata sandi berhasil diperbarui!", "success");
+          setOldPassword('');
+          setNewPassword('');
+          setConfirmNewPassword('');
+        } catch (err) {
+          console.error(err);
+          let errorMsg = "Gagal memperbarui sandi.";
+          if (err.code === 'auth/wrong-password') errorMsg = "Kata sandi lama salah!";
+          showToast(errorMsg, "error");
+        } finally {
+          setPasswordLoading(false);
         }
       };
 
@@ -713,7 +1089,7 @@
                     disabled={authLoading}
                     className="w-full py-3.5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-705 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-2xl font-bold flex items-center justify-center gap-2.5 transition-all shadow-sm active:scale-[0.98] text-xs sm:text-sm"
                   >
-                    <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none">
+                    <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
@@ -772,7 +1148,10 @@
           {/* --- RESPONSIVE STICKY NAVBAR --- */}
           <nav className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div 
+                onClick={() => { setCurrentView('dashboard'); setActiveFriend(null); }}
+                className="flex items-center gap-2.5 sm:gap-3 min-w-0 cursor-pointer hover:opacity-80 transition"
+              >
                 <div className="w-9 h-9 sm:w-10 sm:h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200 dark:shadow-none shrink-0">
                   <svg className="text-white w-5.5 h-5.5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
                 </div>
@@ -844,7 +1223,7 @@
                               : 'bg-slate-100 dark:bg-slate-800 hover:text-indigo-600'
                           }`}
                         >
-                          {isAlarmPlaying ? "Stop Tes" : "Tes Alarm"}
+                          {isAlarmPlaying ? "Stop" : "Tes Alarm"}
                         </button>
                       </div>
 
@@ -882,24 +1261,50 @@
                     setIsDark(target);
                     showToast(target ? "Beralih ke Mode Gelap 🌙" : "Beralih ke Mode Terang ☀️", "info");
                   }}
-                  className="p-2 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:scale-110 active:scale-95 transition-all"
+                  className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:scale-110 active:scale-95 transition-all"
                 >
                   {isDark ? <IconSun /> : <IconMoon />}
+                </button>
+
+                {/* Tombol Sosial (Daftar Teman & Chat) */}
+                <button 
+                  onClick={() => {
+                    setCurrentView('social');
+                  }}
+                  className={`p-2.5 rounded-xl transition-all hover:scale-110 active:scale-95 ${
+                    currentView === 'social' 
+                      ? 'bg-indigo-600 text-white shadow-md' 
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                  }`}
+                  title="Daftar Teman & Chat"
+                >
+                  <IconMessageSquare />
+                </button>
+
+                {/* Tombol Halaman Profil */}
+                <button 
+                  onClick={() => {
+                    setCurrentView('profile');
+                    setActiveFriend(null);
+                  }}
+                  className={`p-2.5 rounded-xl transition-all hover:scale-110 active:scale-95 ${
+                    currentView === 'profile' 
+                      ? 'bg-indigo-600 text-white shadow-md' 
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                  }`}
+                  title="Buka Profil Anda"
+                >
+                  <IconUser />
                 </button>
 
                 {/* Tombol Logout */}
                 <button 
                   onClick={handleLogout}
-                  className="p-2 sm:p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 hover:scale-110 active:scale-95 transition-all"
+                  className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 hover:scale-110 active:scale-95 transition-all"
                   title="Log Out Sesi"
                 >
                   <IconLogout />
                 </button>
-                
-                <div className="hidden lg:flex items-center gap-2 px-3 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-bold border border-indigo-100 dark:border-indigo-800/50">
-                  <IconDatabase />
-                  {isFirebaseReady && !user.isAnonymous ? 'Cloud Sync' : 'Offline Mode'}
-                </div>
               </div>
             </div>
           </nav>
@@ -921,159 +1326,668 @@
             </div>
           )}
 
-          {}
-          <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+          {/* VIEW: DASHBOARD */}
+          {currentView === 'dashboard' && (
+            <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
 
-            {/* Profil Sesi Banner */}
-            <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5 p-4 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-sm">
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
-                  <IconUser />
+              {/* Profil Sesi Banner (Klik untuk ke Profil) */}
+              <div 
+                onClick={() => setCurrentView('profile')}
+                className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5 p-4 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-sm cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-800 transition-all duration-300 group"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl overflow-hidden bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0 group-hover:scale-105 transition-all">
+                    {profilePic ? (
+                      <img src={profilePic} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      <IconUser />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Workspace Terbuka</p>
+                    <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200 truncate max-w-[220px] xs:max-w-[300px] md:max-w-[450px]">
+                      {profileName || user.email || 'Sesi Tamu Terbuka'}
+                    </h2>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Workspace Terbuka</p>
-                  <h2 className="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200 truncate max-w-[220px] xs:max-w-[300px] md:max-w-[450px]">
-                    {user.email || 'Sesi Tamu Terbuka'}
-                  </h2>
+                <div className="text-[11px] text-slate-400 dark:text-slate-500 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-2 sm:pt-0">
+                  <span className="sm:hidden">Sesi ID:</span>
+                  <span className="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/50 transition">{user.uid.slice(0, 8)}...</span>
                 </div>
               </div>
-              <div className="text-[11px] text-slate-400 dark:text-slate-500 flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-2 sm:pt-0">
-                <span className="sm:hidden">Sesi ID:</span>
-                <span className="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px]">{user.uid.slice(0, 8)}...</span>
-              </div>
-            </div>
-            
-            {/* Kartu Statistik */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-12">
-              <StatCard icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>} label="Semua Tugas" value={stats.total} type="indigo" />
-              <StatCard icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.875V11.25M9 10.5H8.25c-.621 0-1.125-.503-1.125-1.125V9M12 9V3M9 6h6m-6 3h6" /></svg>} label="Selesai" value={stats.done} type="emerald" />
-              <StatCard icon={<IconAlertTriangle />} label="Prioritas" value={stats.high} type="rose" />
               
-              <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 text-white shadow-xl shadow-indigo-200 dark:shadow-none relative overflow-hidden group">
-                <div className="relative z-10">
-                  <p className="text-indigo-100/80 text-[10px] sm:text-xs font-bold uppercase tracking-wider">Tingkat Penyelesaian</p>
-                  <h3 className="text-2xl sm:text-3xl font-black mt-1">
-                    {stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0}%
-                  </h3>
-                  <div className="mt-4 h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
-                     <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${stats.total > 0 ? (stats.done/stats.total)*100 : 0}%` }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10">
-              
-              {/* --- SISI KIRI: DAFTAR TUGAS --- */}
-              <div className="lg:col-span-7 order-2 lg:order-1">
-                <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 items-center justify-between mb-6 sm:mb-8">
-                  <div className="relative w-full sm:w-72">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2"><IconSearch /></span>
-                    <input 
-                      type="text" 
-                      placeholder="Cari tugas Anda..." 
-                      className="w-full pl-11 pr-4 py-2.5 sm:py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs sm:text-sm transition-all dark:text-white"
-                      value={searchTerm}
-                      onChange={e => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex w-full sm:w-auto justify-between bg-slate-200/50 dark:bg-slate-800/50 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <TabButton active={filter.sort === 'Terbaru'} label="Terbaru" onClick={() => setFilter({...filter, sort: 'Terbaru'})} />
-                    <TabButton active={filter.sort === 'Prioritas'} label="Prioritas" onClick={() => setFilter({...filter, sort: 'Prioritas'})} />
-                    <TabButton active={filter.sort === 'Deadline'} label="Deadline" onClick={() => setFilter({...filter, sort: 'Deadline'})} />
-                  </div>
-                </div>
-
-                <div className="space-y-3.5 sm:space-y-4">
-                  {processedTodos.map((todo) => (
-                    <TaskItem 
-                      key={todo.id} 
-                      todo={todo} 
-                      onToggle={() => toggleComplete(todo)} 
-                      onDelete={() => deleteTask(todo.id)}
-                    />
-                  ))}
-
-                  {processedTodos.length === 0 && (
-                    <div className="py-16 sm:py-24 text-center">
-                      <h4 className="text-slate-900 dark:text-slate-100 font-bold text-base sm:text-lg">Semua bersih!</h4>
-                      <p className="text-slate-500 dark:text-slate-500 text-xs sm:text-sm mt-1">Belum ada tugas yang sesuai.</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* --- SISI KANAN: FORMULIR INPUT --- */}
-              <div className="lg:col-span-5 order-1 lg:order-2">
-                <div className="bg-white dark:bg-slate-900 rounded-[24px] sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm lg:sticky lg:top-28">
-                  <div className="mb-6 sm:mb-8">
-                    <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <svg className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-indigo-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
-                      Aktivitas Baru
+              {/* Kartu Statistik */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-8 sm:mb-12">
+                <StatCard icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>} label="Semua Tugas" value={stats.total} type="indigo" />
+                <StatCard icon={<svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.875V11.25M9 10.5H8.25c-.621 0-1.125-.503-1.125-1.125V9M12 9V3M9 6h6m-6 3h6" /></svg>} label="Selesai" value={stats.done} type="emerald" />
+                <StatCard icon={<IconAlertTriangle />} label="Prioritas" value={stats.high} type="rose" />
+                
+                <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 text-white shadow-xl shadow-indigo-200 dark:shadow-none relative overflow-hidden group">
+                  <div className="relative z-10">
+                    <p className="text-indigo-100/80 text-xs font-bold uppercase tracking-wider">Tingkat Penyelesaian</p>
+                    <h3 className="text-2xl sm:text-3xl font-black mt-1">
+                      {stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0}%
                     </h3>
-                    <p className="text-slate-400 dark:text-slate-500 text-xs sm:text-sm mt-1">Tambahkan rencana kerja atau tugas harian baru Anda dengan waktu spesifik.</p>
+                    <div className="mt-4 h-1.5 w-full bg-white/20 rounded-full overflow-hidden">
+                       <div className="h-full bg-white rounded-full transition-all duration-500" style={{ width: `${stats.total > 0 ? (stats.done/stats.total)*100 : 0}%` }}></div>
+                    </div>
                   </div>
+                </div>
+              </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
-                    <div>
-                      <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Nama Tugas</label>
+              {/* Grid Form & Tugas */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10">
+                
+                {/* SISI KIRI: DAFTAR TUGAS */}
+                <div className="lg:col-span-7 order-2 lg:order-1">
+                  <div className="flex flex-col sm:flex-row gap-3.5 sm:gap-4 items-center justify-between mb-6 sm:mb-8">
+                    <div className="relative w-full sm:w-72">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2"><IconSearch /></span>
                       <input 
-                        required
-                        placeholder="Contoh: Kirim Proposal & Pitching..."
-                        className="w-full px-4 sm:px-5 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs sm:text-sm transition-all dark:text-white"
-                        value={formData.title}
-                        onChange={e => setFormData({...formData, title: e.target.value})}
+                        type="text" 
+                        placeholder="Cari tugas Anda..." 
+                        className="w-full pl-11 pr-4 py-2.5 sm:py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs sm:text-sm transition-all dark:text-white"
+                        value={searchTerm}
+                        onChange={e => setSearchTerm(e.target.value)}
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Kategori</label>
-                        <select 
-                          className="w-full px-3 sm:px-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-xs sm:text-sm dark:text-white cursor-pointer"
-                          value={formData.category}
-                          onChange={e => setFormData({...formData, category: e.target.value})}
-                        >
-                          {['Pekerjaan', 'Pribadi', 'Belanja', 'Edukasi'].map(c => <option key={c}>{c}</option>)}
-                        </select>
+                    <div className="flex w-full sm:w-auto justify-between bg-slate-200/50 dark:bg-slate-800/50 p-1 rounded-2xl border border-slate-200 dark:border-slate-700">
+                      <TabButton active={filter.sort === 'Terbaru'} label="Terbaru" onClick={() => setFilter({...filter, sort: 'Terbaru'})} />
+                      <TabButton active={filter.sort === 'Prioritas'} label="Prioritas" onClick={() => setFilter({...filter, sort: 'Prioritas'})} />
+                      <TabButton active={filter.sort === 'Deadline'} label="Deadline" onClick={() => setFilter({...filter, sort: 'Deadline'})} />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3.5 sm:space-y-4">
+                    {processedTodos.map((todo) => (
+                      <TaskItem 
+                        key={todo.id} 
+                        todo={todo} 
+                        onToggle={() => toggleComplete(todo)} 
+                        onDelete={() => deleteTask(todo.id)}
+                      />
+                    ))}
+
+                    {processedTodos.length === 0 && (
+                      <div className="py-16 sm:py-24 text-center">
+                        <h4 className="text-slate-900 dark:text-slate-100 font-bold text-base sm:text-lg">Semua bersih!</h4>
+                        <p className="text-slate-500 dark:text-slate-500 text-xs sm:text-sm mt-1">Belum ada tugas yang sesuai.</p>
                       </div>
-                      <div>
-                        <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Prioritas</label>
-                        <select 
-                          className="w-full px-3 sm:px-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-xs sm:text-sm dark:text-white cursor-pointer"
-                          value={formData.priority}
-                          onChange={e => setFormData({...formData, priority: e.target.value})}
-                        >
-                          {['Tinggi', 'Sedang', 'Rendah'].map(p => <option key={p}>{p}</option>)}
-                        </select>
-                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* SISI KANAN: FORMULIR INPUT */}
+                <div className="lg:col-span-5 order-1 lg:order-2">
+                  <div className="bg-white dark:bg-slate-900 rounded-[24px] sm:rounded-[32px] p-5 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm lg:sticky lg:top-28">
+                    <div className="mb-6 sm:mb-8">
+                      <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <svg className="w-5.5 h-5.5 sm:w-6 sm:h-6 text-indigo-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                        Aktivitas Baru
+                      </h3>
+                      <p className="text-slate-400 dark:text-slate-500 text-xs sm:text-sm mt-1">Tambahkan rencana kerja atau tugas harian baru Anda dengan waktu spesifik.</p>
                     </div>
 
-                    <div>
-                      <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Batas Waktu (Tanggal & Jam)</label>
-                      <div className="relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2"><IconCalendar /></span>
+                    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                      <div>
+                        <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Nama Tugas</label>
                         <input 
-                          type="datetime-local"
                           required
-                          className="w-full pl-11 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-xs sm:text-sm dark:text-white cursor-pointer"
-                          value={formData.dueDate}
-                          onChange={e => setFormData({...formData, dueDate: e.target.value})}
+                          placeholder="Contoh: Kirim Proposal & Pitching..."
+                          className="w-full px-4 sm:px-5 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-xs sm:text-sm transition-all dark:text-white"
+                          value={formData.title}
+                          onChange={e => setFormData({...formData, title: e.target.value})}
                         />
                       </div>
-                    </div>
 
-                    <button className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-xs sm:text-sm shadow-lg shadow-indigo-100 dark:shadow-none">
-                      <IconPlus />
-                      TAMBAHKAN TUGAS
-                    </button>
-                  </form>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Kategori</label>
+                          <select 
+                            className="w-full px-3 sm:px-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-xs sm:text-sm dark:text-white cursor-pointer"
+                            value={formData.category}
+                            onChange={e => setFormData({...formData, category: e.target.value})}
+                          >
+                            {['Pekerjaan', 'Pribadi', 'Belanja', 'Edukasi'].map(c => <option key={c}>{c}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Prioritas</label>
+                          <select 
+                            className="w-full px-3 sm:px-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-xs sm:text-sm dark:text-white cursor-pointer"
+                            value={formData.priority}
+                            onChange={e => setFormData({...formData, priority: e.target.value})}
+                          >
+                            {['Tinggi', 'Sedang', 'Rendah'].map(p => <option key={p}>{p}</option>)}
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[9px] sm:text-[10px] font-black text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-1.5 block">Batas Waktu (Tanggal & Jam)</label>
+                        <div className="relative">
+                          <span className="absolute left-4 top-1/2 -translate-y-1/2"><IconCalendar /></span>
+                          <input 
+                            type="datetime-local"
+                            required
+                            className="w-full pl-11 pr-4 py-3 sm:py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-xs sm:text-sm dark:text-white cursor-pointer"
+                            value={formData.dueDate}
+                            onChange={e => setFormData({...formData, dueDate: e.target.value})}
+                          />
+                        </div>
+                      </div>
+
+                      <button className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] text-xs sm:text-sm shadow-lg shadow-indigo-100 dark:shadow-none">
+                        <IconPlus />
+                        TAMBAHKAN TUGAS
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
-          </main>
+            </main>
+          )}
+
+          {/* VIEW: SOCIAL (FRIENDS & CHAT) */}
+          {currentView === 'social' && (
+            <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+              
+              {/* Back Button */}
+              <button 
+                onClick={() => { setCurrentView('dashboard'); setActiveFriend(null); }}
+                className="mb-6 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs sm:text-sm font-bold transition-colors"
+              >
+                <IconArrowLeft />
+                <span>Kembali ke Dashboard</span>
+              </button>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 mt-4">
+                
+                {/* SISI KIRI: DAFTAR TEMAN & ADD FRIEND */}
+                <div className="lg:col-span-4 space-y-6">
+                  
+                  {/* Card: Tambah Teman Baru */}
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-2 flex items-center gap-2">
+                      <IconUserPlus />
+                      Tambah Teman Baru
+                    </h3>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 mb-4 leading-relaxed">
+                      Masukkan ID unik (UID) akun teman Anda yang bisa disalin dari halaman profil mereka.
+                    </p>
+                    
+                    <form onSubmit={handleAddFriend} className="space-y-3">
+                      <input 
+                        type="text" 
+                        placeholder="Tempel ID Teman (UID) di sini..." 
+                        className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800 dark:text-white"
+                        value={friendUidInput}
+                        onChange={(e) => setFriendUidInput(e.target.value)}
+                      />
+                      <button 
+                        type="submit" 
+                        className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs transition active:scale-95"
+                      >
+                        Cari & Tambah Teman
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Card: Daftar Kontak Teman */}
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm">
+                    <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-4 flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
+                      <IconUsers />
+                      Daftar Teman ({friends.length})
+                    </h3>
+
+                    <div className="space-y-3 max-h-[350px] overflow-y-auto">
+                      {friends.length === 0 ? (
+                        <div className="py-8 text-center text-xs text-slate-400 dark:text-slate-500 leading-relaxed">
+                          Daftar teman kosong.<br />Yuk tambah teman pertama Anda menggunakan ID mereka!
+                        </div>
+                      ) : (
+                        friends.map((friend) => (
+                          <div 
+                            key={friend.uid} 
+                            onClick={() => setActiveFriend(friend)}
+                            className={`flex items-center justify-between p-2.5 rounded-2xl cursor-pointer transition ${
+                              activeFriend?.uid === friend.uid 
+                                ? 'bg-indigo-500/15 border border-indigo-400/45' 
+                                : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 border border-transparent'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="w-9 h-9 rounded-full overflow-hidden bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                                {friend.photo ? (
+                                  <img src={friend.photo} alt={friend.displayName} className="w-full h-full object-cover" />
+                                ) : (
+                                  <IconUser />
+                                )}
+                              </div>
+                              <div className="min-w-0">
+                                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{friend.displayName}</h4>
+                                <p className="text-[9px] text-slate-400 dark:text-slate-500 truncate">ID: {friend.uid.slice(0, 8)}...</p>
+                              </div>
+                            </div>
+                            
+                            <span className="text-[10px] bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-lg font-bold shrink-0">
+                              Chat
+                            </span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
+
+                </div>
+
+                {/* SISI KANAN: HALAMAN PERCAKAPAN (CHAT) */}
+                <div className="lg:col-span-8">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm h-[520px] flex flex-col overflow-hidden">
+                    
+                    {!activeFriend ? (
+                      /* TAMPILAN BELUM MEMILIH CHAT */
+                      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+                        <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800/40 rounded-full flex items-center justify-center text-slate-400 dark:text-slate-600 mb-4 border border-slate-100 dark:border-slate-800">
+                          <IconMessageSquare />
+                        </div>
+                        <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200">Mulai Obrolan Baru</h4>
+                        <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-1 max-w-xs leading-relaxed">
+                          Pilih salah satu teman di sebelah kiri untuk melihat pesan atau memulai percakapan real-time.
+                        </p>
+                      </div>
+                    ) : (
+                      /* AREA CHAT UTAMA */
+                      <>
+                        {/* Header Chat */}
+                        <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/20">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-9 h-9 rounded-full overflow-hidden bg-indigo-50 dark:bg-indigo-950 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0">
+                              {activeFriend.photo ? (
+                                <img src={activeFriend.photo} alt={activeFriend.displayName} className="w-full h-full object-cover" />
+                              ) : (
+                                <IconUser />
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">{activeFriend.displayName}</h4>
+                              <p className="text-[9px] text-slate-400 dark:text-slate-500 font-mono truncate">ID: {activeFriend.uid}</p>
+                            </div>
+                          </div>
+                          
+                          <button 
+                            onClick={() => setActiveFriend(null)}
+                            className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+                          >
+                            <IconX />
+                          </button>
+                        </div>
+
+                        {/* Kontainer Pesan Obrolan */}
+                        <div className="flex-1 overflow-y-auto p-5 space-y-3 bg-slate-50/30 dark:bg-slate-950/20">
+                          {messages.length === 0 ? (
+                            <div className="h-full flex items-center justify-center text-center text-[10px] text-slate-400 dark:text-slate-500">
+                              Kirim pesan pertama untuk memulai obrolan dengan {activeFriend.displayName}!
+                            </div>
+                          ) : (
+                            messages.map((msg, index) => {
+                              const isMe = msg.senderUid === user.uid;
+                              return (
+                                <div 
+                                  key={msg.id || index} 
+                                  className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+                                >
+                                  <div className={`max-w-[75%] rounded-2xl px-4 py-2 text-xs leading-relaxed shadow-sm ${
+                                    isMe 
+                                      ? 'bg-indigo-600 text-white rounded-tr-none' 
+                                      : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border border-slate-150 dark:border-slate-800 rounded-tl-none'
+                                  }`}>
+                                    <p className="break-words">{msg.text}</p>
+                                    <span className={`block text-[8px] text-right mt-1 font-medium ${
+                                      isMe ? 'text-indigo-200' : 'text-slate-400 dark:text-slate-500'
+                                    }`}>
+                                      {new Date(msg.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })
+                          )}
+                          <div ref={chatEndRef} />
+                        </div>
+
+                        {/* Input Footer Chat dengan Emoji Picker */}
+                        <div className="relative border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 p-3" ref={emojiPickerRef}>
+                          
+                          {/* Emoji Picker Popover */}
+                          {showEmojiPicker && (
+                            <div className="absolute bottom-16 left-3 bg-white dark:bg-slate-850 border border-slate-200 dark:border-slate-700 rounded-2xl p-3 shadow-xl z-50 w-64 max-w-[90vw] animate-bounce-subtle">
+                              <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Pilih Emoticon</p>
+                              <div className="grid grid-cols-6 gap-2 text-center text-xl max-h-36 overflow-y-auto">
+                                {['😀', '😂', '😍', '😎', '👍', '🔥', '🎉', '❤️', '👏', '🙌', '🤔', '😢', '😮', '🚀', '💡', '💯', '✨', '✔️', '🌟', '👏', '💼', '🏡', '⏰', '🥳'].map((emoji) => (
+                                  <button
+                                    key={emoji}
+                                    type="button"
+                                    onClick={() => handleInsertEmoji(emoji)}
+                                    className="hover:scale-125 active:scale-95 transition-transform p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+                                  >
+                                    {emoji}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          <form onSubmit={handleSendMessage} className="flex gap-2 items-center">
+                            
+                            {/* Tombol Emoji */}
+                            <button
+                              type="button"
+                              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                              className={`p-2.5 rounded-xl transition shrink-0 hover:bg-slate-100 dark:hover:bg-slate-800 ${
+                                showEmojiPicker ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/30' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'
+                              }`}
+                              title="Masukkan Emoticon"
+                            >
+                              <IconSmiley />
+                            </button>
+
+                            <input 
+                              ref={chatInputRef}
+                              type="text" 
+                              placeholder="Tulis pesan Anda..." 
+                              className="flex-1 px-4 py-2.5 bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none text-slate-800 dark:text-white focus:ring-1 focus:ring-indigo-500 transition"
+                              value={chatInput}
+                              onChange={(e) => setChatInput(e.target.value)}
+                              onFocus={() => setShowEmojiPicker(false)}
+                            />
+                            
+                            <button 
+                              type="submit" 
+                              className="p-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition shrink-0 active:scale-90"
+                            >
+                              <IconSend />
+                            </button>
+                          </form>
+                        </div>
+                      </>
+                    )}
+
+                  </div>
+                </div>
+
+              </div>
+
+            </main>
+          )}
+
+          {/* VIEW: PROFILE */}
+          {currentView === 'profile' && (
+            <main className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+              
+              {/* Back Button */}
+              <button 
+                onClick={() => setCurrentView('dashboard')}
+                className="mb-6 flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 text-xs sm:text-sm font-bold transition-colors"
+              >
+                <IconArrowLeft />
+                <span>Kembali ke Dashboard</span>
+              </button>
+
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
+                
+                {/* KARTU PROFIL UTAMA */}
+                <div className="md:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm text-center">
+                  
+                  {/* Avatar Lingkaran */}
+                  <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 text-white text-3xl font-black flex items-center justify-center shadow-lg mb-4 relative overflow-hidden group">
+                    {profilePic ? (
+                      <img src={profilePic} alt="Avatar" className="w-full h-full object-cover transition duration-300 group-hover:scale-105" />
+                    ) : (
+                      profileName ? profileName.slice(0, 2).toUpperCase() : 'G'
+                    )}
+                    <label className="absolute inset-0 bg-black/40 text-white opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-[10px] cursor-pointer transition-opacity duration-200">
+                      <svg className="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg>
+                      Ubah Foto
+                      <input type="file" accept="image/*" className="hidden" onChange={handleUploadPhoto} />
+                    </label>
+                  </div>
+
+                  {/* Formulir Display Name */}
+                  {isEditingProfile ? (
+                    <div className="space-y-2 mb-4">
+                      <input 
+                        type="text" 
+                        maxLength="20"
+                        className="w-full text-center px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-slate-800 dark:text-white font-bold"
+                        value={profileName}
+                        onChange={(e) => setProfileName(e.target.value)}
+                      />
+                      <div className="flex gap-2 justify-center">
+                        <button 
+                          onClick={() => {
+                            setProfileName(user.displayName || user.email.split('@')[0]);
+                            setIsEditingProfile(false);
+                          }}
+                          className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-xs rounded-lg text-slate-600 dark:text-slate-400 font-bold hover:bg-slate-200 transition"
+                        >
+                          Batal
+                        </button>
+                        <button 
+                          onClick={handleSaveProfile}
+                          className="px-3 py-1 bg-indigo-600 text-white text-xs rounded-lg font-bold hover:bg-indigo-700 transition"
+                        >
+                          Simpan
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mb-4">
+                      <h3 className="text-xl font-black text-slate-800 dark:text-slate-200 flex items-center justify-center gap-2">
+                        <span>{profileName || 'Nama Pengguna'}</span>
+                        <button 
+                          onClick={() => setIsEditingProfile(true)}
+                          className="text-slate-400 hover:text-indigo-600 transition"
+                          title="Edit nama panggilan"
+                        >
+                          <IconPencil />
+                        </button>
+                      </h3>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 truncate">{user.email}</p>
+                    </div>
+                  )}
+
+                  <hr className="border-slate-150 dark:border-slate-800 my-4" />
+
+                  {/* Metadata Info */}
+                  <div className="space-y-3.5 text-left text-xs text-slate-500 dark:text-slate-400">
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">Tipe Akun:</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300">
+                        {user.isAnonymous ? 'Sesi Tamu (Offline)' : 'Premium Cloud Sync'}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-1.5">
+                      <span className="font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">ID Teman Anda (UID):</span>
+                      <div className="flex items-center justify-between gap-1.5">
+                        <span className="font-mono bg-slate-50 dark:bg-slate-800 px-2 py-1 rounded text-[10px] truncate max-w-[210px] border border-slate-200 dark:border-slate-700">
+                          {user.uid}
+                        </span>
+                        <button 
+                          onClick={() => {
+                            const dummy = document.createElement('textarea');
+                            dummy.value = user.uid;
+                            document.body.appendChild(dummy);
+                            dummy.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(dummy);
+                            showToast("ID Anda berhasil disalin ke clipboard! Bagikan ini ke teman Anda.", "info");
+                          }}
+                          className="px-2 py-1 bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold rounded-lg border border-indigo-100 dark:border-indigo-900 transition hover:bg-indigo-100"
+                        >
+                          Salin
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">Layanan DB:</span>
+                      <span className="font-bold text-slate-700 dark:text-slate-300">
+                        {isFirebaseReady ? 'Firestore Cloud' : 'LocalStorage Offline'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full mt-6 py-3 bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400 rounded-xl font-bold hover:bg-rose-100 dark:hover:bg-rose-950/40 text-xs sm:text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                  >
+                    <IconLogout />
+                    <span>LOG OUT AKUN</span>
+                  </button>
+
+                </div>
+
+                {/* SISI KANAN: STATS, PREFERENCES & UBAH SANDI */}
+                <div className="md:col-span-7 space-y-6">
+                  
+                  {/* RINGKASAN PRODUKTIVITAS */}
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
+                    <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Kinerja Produktivitas</h4>
+                    
+                    <div className="grid grid-cols-3 gap-3 text-center mb-6">
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <span className="block text-xl sm:text-2xl font-black text-slate-800 dark:text-white">{stats.total}</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Tugas</span>
+                      </div>
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <span className="block text-xl sm:text-2xl font-black text-emerald-600 dark:text-emerald-400">{stats.done}</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Selesai</span>
+                      </div>
+                      <div className="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <span className="block text-xl sm:text-2xl font-black text-slate-500 dark:text-slate-400">{stats.total - stats.done}</span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Aktif</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-slate-600 dark:text-slate-300">
+                        <span>Tingkat Penyelesaian Sesi</span>
+                        <span>{stats.total > 0 ? Math.round((stats.done / stats.total) * 100) : 0}%</span>
+                      </div>
+                      <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-indigo-600 dark:bg-indigo-400 rounded-full transition-all duration-500" 
+                          style={{ width: `${stats.total > 0 ? (stats.done / stats.total) * 100 : 0}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* FORMULIR GANTI PASSWORD (Hanya jika Login via Email) */}
+                  {isFirebaseReady && user && !user.isAnonymous && auth.currentUser.providerData.some(p => p.providerId === 'password') && (
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm">
+                      <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Ubah Kata Sandi Keamanan</h4>
+                      
+                      <form onSubmit={handleUpdatePassword} className="space-y-3.5">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 items-center">
+                          <label className="text-xs font-bold text-slate-500">Sandi Lama</label>
+                          <input 
+                            type="password" 
+                            required
+                            placeholder="••••••••"
+                            className="w-full sm:col-span-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500 outline-none text-slate-850 dark:text-white"
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 items-center">
+                          <label className="text-xs font-bold text-slate-500">Sandi Baru</label>
+                          <input 
+                            type="password" 
+                            required
+                            placeholder="Min 6 karakter"
+                            className="w-full sm:col-span-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500 outline-none text-slate-850 dark:text-white"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 items-center">
+                          <label className="text-xs font-bold text-slate-500">Konfirmasi Sandi Baru</label>
+                          <input 
+                            type="password" 
+                            required
+                            placeholder="••••••••"
+                            className="w-full sm:col-span-2 px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:ring-1 focus:ring-indigo-500 outline-none text-slate-850 dark:text-white"
+                            value={confirmNewPassword}
+                            onChange={(e) => setConfirmNewPassword(e.target.value)}
+                          />
+                        </div>
+                        <div className="flex justify-end pt-2">
+                          <button 
+                            type="submit" 
+                            disabled={passwordLoading}
+                            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition active:scale-95 disabled:opacity-50"
+                          >
+                            {passwordLoading ? "Memproses..." : "Perbarui Kata Sandi"}
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  )}
+
+                  {/* PUSAT PENGATURAN PREFERENSI */}
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-5">
+                    <h4 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Preferensi Aplikasi</h4>
+                    
+                    {/* Preferensi Suara */}
+                    <div className="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/30 border border-slate-150 dark:border-slate-800/80 rounded-2xl">
+                      <div>
+                        <h5 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">Volume Suara Alarm</h5>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Bunyi peringatan retro double-beep saat deadline kritis.</p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          const updated = !isSoundEnabled;
+                          setIsSoundEnabled(updated);
+                          if (!updated && isAlarmPlaying) stopContinuousAlarm();
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                          isSoundEnabled 
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800/50' 
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700'
+                        }`}
+                      >
+                        {isSoundEnabled ? 'Aktif' : 'Senyap'}
+                      </button>
+                    </div>
+
+                    {/* Preferensi Tema Gelap */}
+                    <div className="flex items-center justify-between p-3.5 bg-slate-50 dark:bg-slate-800/30 border border-slate-150 dark:border-slate-800/80 rounded-2xl">
+                      <div>
+                        <h5 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">Mode Tampilan Gelap</h5>
+                        <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">Maksimalkan performa baterai dan kenyamanan mata di malam hari.</p>
+                      </div>
+                      <button 
+                        onClick={() => setIsDark(!isDark)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                          isDark 
+                            ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800/50' 
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700'
+                        }`}
+                      >
+                        {isDark ? 'Mode Gelap' : 'Mode Terang'}
+                      </button>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </main>
+          )}
 
           {/* --- POPUP DI TENGAH: ALARM MENYALA (LOOPING) --- */}
           {isAlarmPlaying && activeAlarmTasks.length > 0 && (
@@ -1105,7 +2019,6 @@
             </div>
           )}
 
-          {}
           {/* --- POP-UP TOAST CONTAINER DI TENGAH LAYAR --- */}
           <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-4">
             <div className="flex flex-col gap-2.5 max-w-sm w-full pointer-events-auto">
@@ -1218,7 +2131,6 @@
             </div>
           </div>
 
-          {/* md:opacity-0 & md:group-hover:opacity-100 membuat tombol HAPUS selalu muncul di HP/Tablet, dan muncul saat di-hover saja jika di Desktop */}
           <div className="flex items-center gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
             <button onClick={onDelete} className="p-2 sm:p-3 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-xl transition-all">
               <IconTrash />
